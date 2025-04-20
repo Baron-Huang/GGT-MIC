@@ -271,9 +271,12 @@ class TicMIL_Parallel_Head(nn.Module):
                 dis_1_tar = self.tgi_clustering_block.mmd_dis(target_guiding_y, assign_y_1)
                 dis_2_tar = self.tgi_clustering_block.mmd_dis(target_guiding_y, assign_y_2)
 
+                ##adaptive dis
+                y[i][0:961, :][assigned_sets['0'], :] = (1/dis_0_tar) * y[i][0:961, :][assigned_sets['0'], :]
+                y[i][0:961, :][assigned_sets['1'], :] = (1/dis_1_tar) * y[i][0:961, :][assigned_sets['1'], :]
+                y[i][0:961, :][assigned_sets['2'], :] = (1/dis_2_tar) * y[i][0:961, :][assigned_sets['2'], :]
 
-
-                ## del max and aggregate: my_tic_simple
+                ## del max and aggregate 
                 max_ord = torch.argmax(torch.tensor([dis_0_tar, dis_1_tar, dis_2_tar]).cuda())
                 min_list = []
                 for j in range(3):
@@ -282,7 +285,6 @@ class TicMIL_Parallel_Head(nn.Module):
                     else:
                         min_list.append(j)
 
-                # SOTA:tic+attn
                 attn_output = self.cross_attn_aggregation(target_guiding_y,[[assign_y_0, assign_y_1, assign_y_2][k] for k in min_list])
                 agg_y[i] = torch.mean(attn_output, dim=0, keepdim=True)
 
@@ -292,14 +294,12 @@ class TicMIL_Parallel_Head(nn.Module):
                 final_y[i] = torch.mean(var, dim=0, keepdim=True)
 
             y1 = self.head(final_y)
-            y2 = self.head_2(agg_y) # SOTA:tic+attn
-            min_dis = 0
-            non_min_dis = 0
+            y2 = self.head_2(agg_y)
+            
             if self.feat_extract:
                 return final_y
             else:
-                return 0.8 * y1 + 0.2 * y2, min_dis, non_min_dis # SOTA:tic+attn
-            # return y1, min_dis, non_min_dis   # tic: del max and only mean agg
+                return 0.8 * y1 + 0.2 * y2
 
         elif x.shape[0] / self.bags_len > 1 and self.abla_type == 'tic':
             # clustering guiding
