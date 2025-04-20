@@ -9,7 +9,7 @@
 
 Here's an overview of our **Hierarchical Cluster-incorporated Aware Filtering (HCF-MIL)** method:
 
-![image](./image/main.pdf)
+[![image](./image/main.pdf)](https://github.com/Prince-Lee-PathAI/HCF-MIL/blob/main/images/main.pdf)
 
 
 
