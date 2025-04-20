@@ -15,13 +15,12 @@ Here's an overview of our **Hierarchical Cluster-incorporated Aware Filtering (H
 
 ## :mag: TODO
 <font color="red">**We are currently organizing all the code. Stay tuned!**</font>
-- [x] Distillation code
+- [x] training code
 - [x] Evaluation code
-- [x] Sampling network
-- [x] Config files
-- [ ] Pretrained models
-- [ ] Distilled datasets
-- [ ] Project page
+- [x] Model code
+- [ ] Pretrained weights
+- [ ] Datasets
+
 
 
 
@@ -62,18 +61,3 @@ torchrun --nproc_per_node={n_gpus} --nnodes=1 evaluation_script.py --gpu={gpu_id
 
 ## :postbox: Contact
 If you have any questions, please contact [Chentao Li](https://prince-lee-pathai.github.io/) (`cl4691@columbia.edu`).
-
-## :pushpin: Citation
-If you find NCFM useful for your research and applications, please cite using this BibTeX:
-
-```bibtex
-@misc{wang2025datasetdistillationneuralcharacteristic,
-      title={Dataset Distillation with Neural Characteristic Function: A Minmax Perspective}, 
-      author={Shaobo Wang and Yicun Yang and Zhiyuan Liu and Chenghao Sun and Xuming Hu and Conghui He and Linfeng Zhang},
-      year={2025},
-      eprint={2502.20653},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2502.20653}, 
-}
-```
