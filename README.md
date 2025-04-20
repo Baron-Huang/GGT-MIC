@@ -32,7 +32,7 @@ To get started with NCFM, follow the installation instructions below.
 1.  Clone the repo
 
 ```sh
-git clone https://github.com/gszfwsb/NCFM.git
+git clone https://github.com/Prince-Lee-PathAI/HCF-MIL
 ```
 
 2. Install dependencies
@@ -41,17 +41,28 @@ git clone https://github.com/gszfwsb/NCFM.git
 pip install -r requirements.txt
 ```
 
-3. Training
+3. Training on Swin Transformer-S Backbone
 ```sh
-cd pretrain
-torchrun --nproc_per_node={n_gpus} --nnodes=1 pretrain_script.py --gpu={gpu_ids} --config_path=../config/{ipc}/{dataset}.yaml
-
+sh run_swinT.sh
+Modify: --abla_type sota --run_mode train --random_seed ${seed}
 ```
 
 4. Evaluation
 ```sh
-cd evaluation 
-torchrun --nproc_per_node={n_gpus} --nnodes=1 evaluation_script.py --gpu={gpu_ids} --ipc={ipc} --config_path=../config/{ipc}/{dataset}.yaml --load_path={distilled_dataset.pt}
+sh run_swinT.sh
+Modify: --abla_type sota --run_mode test --random_seed ${seed}
+```
+
+5. Extract features for plots
+```sh
+sh run_swinT.sh
+Modify: --abla_type sota --run_mode test --random_seed ${seed} --feat_extract
+```
+
+6. Interpretability plots
+```sh
+sh run_swinT.sh
+Modify: --abla_type sota --run_mode test --random_seed ${seed} --bag_weight
 ```
 
 ## :postbox: Contact
