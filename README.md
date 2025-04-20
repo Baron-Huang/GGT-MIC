@@ -9,7 +9,7 @@
 
 Here's an overview of our **Hierarchical Cluster-incorporated Aware Filtering (HCF-MIL)** method:
 
-![Figure 1](./images/main.pdf)
+![Figure 1](./images/anova.jpg)
 
 
 
