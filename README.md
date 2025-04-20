@@ -61,7 +61,7 @@ torchrun --nproc_per_node={n_gpus} --nnodes=1 evaluation_script.py --gpu={gpu_id
 ```
 
 ## :postbox: Contact
-If you have any questions, please contact [Chentao Li]([prince-lee-pathai.github.io](https://prince-lee-pathai.github.io/)) (`cl4691@columbia.edu`).
+If you have any questions, please contact [Chentao Li](https://prince-lee-pathai.github.io/) (`cl4691@columbia.edu`).
 
 ## :pushpin: Citation
 If you find NCFM useful for your research and applications, please cite using this BibTeX:
