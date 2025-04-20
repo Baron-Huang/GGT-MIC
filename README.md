@@ -1,17 +1,13 @@
-# An End-to-end Knowledge-driven Multi-instance Learning Networkwith Hierarchical Cluster-incorporated Aware Filtering for Larynx Pathological Grading 
-
-Official PyTorch implementation of the paper ["Dataset Distillation with Neural Characteristic Function"](https://arxiv.org/abs/2502.20653) (NCFM) in CVPR 2025.
-
+# An End-to-end Knowledge-driven Multi-instance Learning Network with Hierarchical Cluster-incorporated Aware Filtering for Larynx Pathological Grading 
 
 ## :fire: News
 
-- [2025/03/02] The code of our paper has been released.  
-- [2025/02/27] Our NCFM paper has been accepted to CVPR 2025 (Rating: 555). Thanks!  
+- [2025/04/25] Our manuscript has been submitted to IEEE Transactions on Medical Imaging. 
 
 
 ## :rocket: Pipeline
 
-Here's an overview of the process behind our **Neural Characteristic Function Matching (NCFM)** method:
+Here's an overview of our **Hierarchical Cluster-incorporated Aware Filtering (HCF-MIL)** method:
 
 ![Figure 1](./asset/figure1.png?raw=true)
 
