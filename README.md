@@ -9,7 +9,7 @@
 
 Here's an overview of our **Hierarchical Cluster-incorporated Aware Filtering (HCF-MIL)** method:
 
-[![image](./image/main.pdf)]
+[image](./image/main.pdf)
 
 
 
