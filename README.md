@@ -60,28 +60,8 @@ cd evaluation
 torchrun --nproc_per_node={n_gpus} --nnodes=1 evaluation_script.py --gpu={gpu_ids} --ipc={ipc} --config_path=../config/{ipc}/{dataset}.yaml --load_path={distilled_dataset.pt}
 ```
 
-### :blue_book: Example Usage
-
-1. CIFAR-10
-
-```sh
-#ipc50
-cd condense
-torchrun --nproc_per_node=8 --nnodes=1 --master_port=34153 condense_script.py --gpu="0,1,2,3,4,5,6,7" --ipc=50 --config_path=../config/ipc50/cifar10.yaml
-```
-
-2. CIFAR-100
-
-```sh
-#ipc10
-cd condense
-torchrun --nproc_per_node=8 --nnodes=1 --master_port=34153 condense_script.py --gpu="0,1,2,3,4,5,6,7" --ipc=10 --config_path=../config/ipc10/cifar100.yaml
-```
-
-
-
 ## :postbox: Contact
-If you have any questions, please contact [Shaobo Wang](https://gszfwsb.github.io/)(`shaobowang1009@sjtu.edu.cn`).
+If you have any questions, please contact [Chentao Li](prince-lee-pathai.github.io)(`cl4691@columbia.edu`).
 
 ## :pushpin: Citation
 If you find NCFM useful for your research and applications, please cite using this BibTeX:
