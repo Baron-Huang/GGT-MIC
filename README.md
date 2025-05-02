@@ -2,7 +2,7 @@
 
 ## :fire: News
 
-- [2025/04/25] Our manuscript has been submitted to IEEE Transactions on Medical Imaging. 
+- [2025/04/25]
 
 
 ## :rocket: Pipeline
