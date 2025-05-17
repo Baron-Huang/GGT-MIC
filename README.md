@@ -2,7 +2,8 @@
 
 ## :fire: News
 
-- [2025/04/25]
+- [2025/04/25] Our manuscript was submitted to _IEEE Transactions on Systems, Man, and Cybernetics_.
+
 
 
 ## :rocket: Pipeline
