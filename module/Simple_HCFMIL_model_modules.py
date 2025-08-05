@@ -1,8 +1,3 @@
-############################# TicMIL_model_modules ##############################
-#### Author: Dr. Mingrui Ma
-#### Email: xxx
-#### Department: Xinjiang University
-#### Attempt: creating TicMIL model by loading pretrained weight for searching the best learning rate
 import time
 
 from sympy.polys.polyconfig import query
@@ -58,8 +53,6 @@ class TgiClustering():
 
         mmd = MMDLoss()
         return mmd(x,y)
-
-
 
     def l2_distance(self, x, y):
         return torch.sqrt((x - y).permute(1, 0) @ (x - y))
@@ -235,9 +228,7 @@ class TicMIL_Parallel_Head(nn.Module):
 
     def forward(self, x):
 
-
         if x.shape[0] / self.bags_len > 1 and self.abla_type == 'sota':
-
 
             # clustering guiding
             y = torch.reshape(x, (int(x.shape[0] / self.bags_len), self.bags_len, x.shape[1]))
@@ -251,14 +242,6 @@ class TicMIL_Parallel_Head(nn.Module):
 
             # divided into batch again
             for i in range(y.shape[0]):
-                # if self.model_stats == 'train':
-                #     from Utils.Setup_Seed import setup_seed
-                #     setup_seed(self.seed)
-                # elif self.model_stats == 'test':
-                #     from Utils.Setup_Seed import setup_seed
-                #     setup_seed(self.seed)
-                # else:
-                #     print('error!!!!')
 
                 assigned_sets = self.tgi_clustering_block.forward(y[i][0:961, :])
                 target_guiding_y = y[i][961:, :]
@@ -300,135 +283,4 @@ class TicMIL_Parallel_Head(nn.Module):
                 return final_y
             else:
                 return 0.8 * y1 + 0.2 * y2
-
-        elif x.shape[0] / self.bags_len > 1 and self.abla_type == 'tic':
-            # clustering guiding
-            y = torch.reshape(x, (int(x.shape[0] / self.bags_len), self.bags_len, x.shape[1]))
-            if self.bag_weight:
-                bag_w = torch.mean(y,dim=2,keepdim=True)
-                return bag_w
-
-            # t_1 = time.time()
-            final_y = torch.zeros(self.batch_size, 768).cuda()
-
-            # divided into batch again
-            for i in range(y.shape[0]):
-                assigned_sets = self.tgi_clustering_block.forward(y[i][0:961, :])
-                target_guiding_y = y[i][961:, :]
-                assign_y_0 = y[i][0:961, :][assigned_sets['0'], :]
-                assign_y_1 = y[i][0:961, :][assigned_sets['1'], :]
-                assign_y_2 = y[i][0:961, :][assigned_sets['2'], :]
-
-                # clustering guiding aggregate
-                dis_0_tar = self.tgi_clustering_block.mmd_dis(target_guiding_y, assign_y_0)
-                dis_1_tar = self.tgi_clustering_block.mmd_dis(target_guiding_y, assign_y_1)
-                dis_2_tar = self.tgi_clustering_block.mmd_dis(target_guiding_y, assign_y_2)
-
-                ## del max and aggregate: my_tic_simple
-                max_ord = torch.argmax(torch.tensor([dis_0_tar, dis_1_tar, dis_2_tar]).cuda())
-                for j in range(3):
-                    if max_ord == torch.tensor(j).cuda():
-                        y[i][0:961, :][assigned_sets[str(j)], :] = 0
-
-                # delete directly
-                mask = (y[i] != 0).any(dim=1)
-                var = y[i][mask]
-                final_y[i] = torch.mean(var, dim=0, keepdim=True)
-
-            y1 = self.head(final_y)
-            min_dis = 0
-            non_min_dis = 0
-            if self.feat_extract:
-                return final_y
-            else:
-                return y1, min_dis, non_min_dis   # tic: del max and only mean agg
-        else:
-            # if self.model_stats == 'train':
-            #     from Utils.Setup_Seed import setup_seed
-            #     setup_seed(self.seed)
-            # elif self.model_stats == 'test':
-            #     from Utils.Setup_Seed import setup_seed
-            #     setup_seed(self.seed)
-            # else:
-            #     print('error!!!!')
-            y = torch.reshape(x, (int(x.shape[0] / self.bags_len), self.bags_len, x.shape[1]))  # balanced batch
-            y = torch.mean(y, dim=1, keepdim=True)  # balanced batch
-            y = torch.reshape(y, (y.shape[0], y.shape[2]))  # balanced batch
-            y = self.head(y)
-            return y
-
-
-
-class TicMIL_Parallel_Feature_for_ablation(nn.Module):
-    def __init__(self, base_model=None):
-        super(TicMIL_Parallel_Feature_for_ablation, self).__init__()
-        self.layers_0 = base_model.layers[0]
-        self.layers_1 = base_model.layers[1]
-        self.layers_2 = base_model.layers[2]
-        self.layers_3 = base_model.layers[3]
-        self.patch_embed = base_model.patch_embed
-        self.pos_drop = base_model.pos_drop
-        self.norm = base_model.norm
-        self.avgp = nn.AvgPool1d(kernel_size=9, stride=9)
-
-
-    def forward(self, x):
-        y = self.patch_embed(x)
-        y = self.pos_drop(y)
-        y = self.layers_0(y)
-        y = self.layers_1(y)
-        y = self.layers_2(y)
-        y = self.layers_3(y)
-        y = self.norm(y)
-        y = self.avgp(y.permute(0, 2, 1))
-        y = torch.reshape(y, (y.shape[0], y.shape[1]))
-        return y
-
-class TicMIL_Parallel_Head_for_ablation(nn.Module):
-    def __init__(self, base_model = None, class_num = 3, batch_size = 2, bags_len = 1042):
-        super(TicMIL_Parallel_Head_for_ablation, self).__init__()
-        self.head = base_model.head
-        self.batch_size = batch_size
-        self.bags_len = bags_len
-
-    def forward(self, x):
-        if x.shape[0] / self.bags_len > 1:
-            y = torch.reshape(x, (int(x.shape[0] / self.bags_len), self.bags_len, x.shape[1]))
-            y = torch.mean(y, dim=1, keepdim=True)
-            y = torch.reshape(y, (y.shape[0], y.shape[2]))
-        else:
-            y = torch.mean(x, dim=0, keepdim=True)
-            y = torch.reshape(y, (y.shape[0], y.shape[1]))
-        y = self.head(y)
-        return y
-
-
-class TicMIL_for_ablation(nn.Module):
-    def __init__(self, base_model=None, class_num=3):
-        super(TicMIL_for_ablation, self).__init__()
-        self.layers_0 = base_model.layers[0]
-        self.layers_1 = base_model.layers[1]
-        self.layers_2 = base_model.layers[2]
-        self.layers_3 = base_model.layers[3]
-        self.patch_embed = base_model.patch_embed
-        self.pos_drop = base_model.pos_drop
-        self.norm = base_model.norm
-        self.head = base_model.head
-        self.avgp = nn.AvgPool1d(kernel_size=9, stride=9)
-
-
-    def forward(self, x):
-        y = self.patch_embed(x)
-        y = self.pos_drop(y)
-        y = self.layers_0(y)
-        y = self.layers_1(y)
-        y = self.layers_2(y)
-        y = self.layers_3(y)
-        y = self.norm(y)
-        y = self.avgp(y.permute(0, 2, 1))
-        y = torch.reshape(y, (y.shape[0], y.shape[1]))
-        y = torch.mean(y, dim=0, keepdim=True)
-        y = self.head(y)
-        return y
-
 
