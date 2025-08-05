@@ -255,9 +255,9 @@ class TicMIL_Parallel_Head(nn.Module):
                 dis_2_tar = self.tgi_clustering_block.mmd_dis(target_guiding_y, assign_y_2)
 
                 ##adaptive dis
-                y[i][0:961, :][assigned_sets['0'], :] = (1/dis_0_tar) * y[i][0:961, :][assigned_sets['0'], :]
-                y[i][0:961, :][assigned_sets['1'], :] = (1/dis_1_tar) * y[i][0:961, :][assigned_sets['1'], :]
-                y[i][0:961, :][assigned_sets['2'], :] = (1/dis_2_tar) * y[i][0:961, :][assigned_sets['2'], :]
+                y[i][0:961, :][assigned_sets['0'], :] = (1-dis_0_tar) * y[i][0:961, :][assigned_sets['0'], :]
+                y[i][0:961, :][assigned_sets['1'], :] = (1-dis_1_tar) * y[i][0:961, :][assigned_sets['1'], :]
+                y[i][0:961, :][assigned_sets['2'], :] = (1-dis_2_tar) * y[i][0:961, :][assigned_sets['2'], :]
 
                 ## del max and aggregate 
                 max_ord = torch.argmax(torch.tensor([dis_0_tar, dis_1_tar, dis_2_tar]).cuda())
@@ -283,5 +283,6 @@ class TicMIL_Parallel_Head(nn.Module):
                 return final_y
             else:
                 return 0.8 * y1 + 0.2 * y2
+
 
 
