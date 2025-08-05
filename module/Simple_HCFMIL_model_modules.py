@@ -17,20 +17,20 @@ class CrossAttnAggregate(nn.Module):
         super(CrossAttnAggregate, self).__init__()
         self.dropout = nn.Dropout(dropout)
 
-
     def forward(self, y_guide, y_c):
         query = y_guide.clone()
-        d = query.shape[-1]
         if isinstance(y_c,list):
             # Assign x1 and x2 to query and key
 
             key_c1 = y_c[0]
             key_c2 = y_c[1]
+            d1 = key_c1.shape[-1]
+            d2 = key_c2.shape[-1]
 
-            scores = torch.mm(query, key_c1.transpose(0, 1)) / math.sqrt(d)
+            scores = torch.mm(query, key_c1.transpose(0, 1)) / math.sqrt(d1)
             output_c1 = torch.mm(self.dropout(F.softmax(scores, dim=-1)), y_c[0])
 
-            scores = torch.mm(query, key_c2.transpose(0, 1)) / math.sqrt(d)
+            scores = torch.mm(query, key_c2.transpose(0, 1)) / math.sqrt(d2)
             output_c2 = torch.mm(self.dropout(F.softmax(scores, dim=-1)), y_c[1])
             return output_c1 + output_c2
         else:
@@ -283,4 +283,5 @@ class TicMIL_Parallel_Head(nn.Module):
                 return final_y
             else:
                 return 0.8 * y1 + 0.2 * y2
+
 
