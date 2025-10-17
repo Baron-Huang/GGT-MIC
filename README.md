@@ -1,5 +1,4 @@
-# An End-to-end Knowledge-driven Multi-instance Learning Network with Hierarchical Cluster-incorporated Aware Filtering for Larynx Pathological Grading 
-
+# Game-optimization Graph Tensor-driven Multi-instance Clustering for Pathological Whole-slide Image Explainable Representation
 ## :fire: News
 
 - [2025/04/25] Our manuscript was currently Under Review  _IEEE Journal of Biomedical and Health Informatics_.
